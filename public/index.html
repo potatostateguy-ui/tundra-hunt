@@ -169,7 +169,7 @@ section.info{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px
     </dl>
   </header>
 
-  <p class="lede">Every dealer truck below links to its listing and shows its VIN, so you can run a history report or <a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noopener">recall check</a> before you call. It includes the Wasatch Front, road trips inside your Las Vegas to Boise range, and CarMax stores that will ship to Utah. Private-party sites like KSL, Craigslist and Facebook Marketplace can't be scored the same way, so they're at the bottom as leads and ready-made searches.</p>
+  <p class="lede">Every dealer truck below links to its listing and shows its VIN, so you can run a history report or <a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noopener">recall check</a> before you call. It includes the Wasatch Front, road trips inside your Las Vegas to Boise range, and CarMax stores that will ship to Utah. Private-party sites like KSL, Craigslist and Facebook Marketplace can't be scored the same way, so they're at the bottom as ready-made searches.</p>
 
   <section class="refresh" aria-labelledby="rf-h">
     <div class="rf-main">
@@ -248,15 +248,6 @@ section.info{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px
     <h2>Sold or removed since last refresh</h2>
     <p>Trucks that were on the list last time but no longer show up. Watching this tells you how fast this spec moves.</p>
     <ul class="leads" id="gone"></ul>
-
-    <h2>Private-party and classified leads</h2>
-    <p>These came up on Craigslist around Boise. Craigslist doesn't show VINs or history in search results, so they aren't scored; confirm the cab, 4x4, engine and miles before you drive. If a link has expired, use the Craigslist searches below.</p>
-    <ul class="leads">
-      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2015-toyota-tundra-1794/htnRSZTZdPtMJ143t9XjWa" target="_blank" rel="noopener">2015 Tundra 1794 Edition CrewMax 4WD</a></span><span class="p">$27,995</span><span class="m">Bargain Auto Sales, Garden City, ID. Miles not shown in search.</span></li>
-      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2015-toyota-tundra-crewmax/k5coEPBiSXtVs4tHJbCFLR" target="_blank" rel="noopener">2015 Tundra CrewMax Limited 5.7L 4x4</a></span><span class="p">$25,995</span><span class="m">Boise Auto Group, Boise, ID. Miles not shown in search.</span></li>
-      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2014-toyota-tundra-crew-4x4-trd/6sZ1zjCzMsqXYg2Fo5uJ6U" target="_blank" rel="noopener">2014 Tundra Crew 4x4 TRD 5.7L, 59,539 miles</a></span><span class="p">$34,995</span><span class="m">usaworktrucks.com, Boise, ID. Confirm it's a CrewMax, not a Double Cab.</span></li>
-      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2014-toyota-tundra-sr5-92k-miles/hbtfVhsWZXaKpPLyqabCZL" target="_blank" rel="noopener">2014 Tundra SR5, 92k miles</a></span><span class="p">$25,995</span><span class="m">TT Auto Sales, Boise, ID. Cab and drivetrain not stated.</span></li>
-    </ul>
 
     <h2>Search more sites</h2>
     <p>Each button opens a live search on that site, pre-filled for a 2014 to 2021 Tundra under $35k where the site allows it. Add "CrewMax" and "4x4" filters on the site if they don't carry over.</p>
@@ -445,7 +436,7 @@ document.addEventListener("click",e=>{
 ["f-where","f-price","f-miles","f-year","f-trim","f-change","f-sort","a-tax","a-doc","a-down","a-apr","a-term"].forEach(id=>$(id).addEventListener("input",render));
 
 const Q="toyota tundra crewmax";
-const cl=(sub)=>`https://${sub}.craigslist.org/search/cta?query=${encodeURIComponent(Q)}&min_auto_year=2014&max_auto_year=2021&max_price=35000&auto_drivetrain=3`;
+const cl=(sub)=>`https://www.craigslist.org/search/area/${sub}?cat=cta&query=${encodeURIComponent(Q)}&min_auto_year=2014&max_auto_year=2021&max_price=35000&auto_drivetrain=3`;
 const fb=(city)=>`https://www.facebook.com/marketplace/${city}/search?query=${encodeURIComponent("tundra crewmax")}&minYear=2014&maxYear=2021&maxPrice=35000`;
 const SITES=[
  {n:"KSL Cars",d:"Utah's biggest private-party car site. Best single place to look locally.",l:[["Tundra 2014 to 2021","https://cars.ksl.com/search/make/Toyota/model/Tundra/yearFrom/2014/yearTo/2021/priceTo/35000"]]},
