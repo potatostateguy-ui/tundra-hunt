@@ -74,7 +74,7 @@ ol.results{list-style:none;margin:0;padding:0}
 .src{font:600 0.8rem/1 var(--cond);padding:4px 7px;border-radius:3px;border:1px solid var(--line);color:var(--muted)}
 .src.local{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .where{color:var(--muted);font-size:0.95rem;width:100%}
-.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 18px;margin:10px 0 8px}
+.facts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px 18px;margin:10px 0 8px}
 .fact dt{font-size:0.78rem;color:var(--muted)}
 .fact dd{margin:1px 0 0;font:600 1.15rem/1.2 var(--cond)}
 .fact .aux{display:block;font:400 0.82rem/1.3 var(--body);color:var(--muted)}
@@ -277,7 +277,25 @@ section.info{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px
           <input id="a-doc" type="number" min="0" max="2000" step="25" value="499">
         </label>
       </div>
-      <p class="fine" style="margin-top:8px">Both are rough Utah defaults; edit them to match your quote. Registration and title fees aren't included.</p>
+      <h2 style="margin-top:18px">Monthly payment estimate</h2>
+      <div class="controls" style="margin:6px 0 0;border:0;padding:0">
+        <label class="ctl">Down payment $
+          <input id="a-down" type="number" min="0" max="100000" step="500" value="5000">
+        </label>
+        <label class="ctl">APR %
+          <input id="a-apr" type="number" min="0" max="30" step="0.1" value="7.5">
+        </label>
+        <label class="ctl">Term
+          <select id="a-term">
+            <option value="36">36 months</option>
+            <option value="48">48 months</option>
+            <option value="60" selected>60 months</option>
+            <option value="72">72 months</option>
+            <option value="84">84 months</option>
+          </select>
+        </label>
+      </div>
+      <p class="fine" style="margin-top:8px">Both tax and doc fee above are rough Utah defaults; edit them to match your quote. Registration and title fees aren't included. The payment is the out-the-door price minus your down payment, financed at the APR and term you pick. Rates vary with credit and lender, and used trucks over 100k miles often carry higher rates, so treat it as a ballpark.</p>
     </div>
     <div>
       <h2>What to check on any 2014 to 2021 5.7L</h2>
@@ -320,6 +338,13 @@ function otd(d){
   const tax=(parseFloat($("a-tax").value)||0)/100, doc=parseFloat($("a-doc").value)||0;
   return d.total*(1+tax)+doc;
 }
+function payment(d){
+  const down=Math.max(0,parseFloat($("a-down").value)||0), apr=(parseFloat($("a-apr").value)||0)/100/12, n=+$("a-term").value;
+  const p=Math.max(0,otd(d)-down);
+  if(!p) return 0;
+  return apr ? p*apr/(1-Math.pow(1+apr,-n)) : p/n;
+}
+const termTxt=()=>`${fmt(Math.max(0,parseFloat($("a-down").value)||0))} down, ${$("a-term").value} mo at ${parseFloat($("a-apr").value)||0}%`;
 const PARTS=[["price","Price vs market",35],["miles","Miles for age",20],["yeartrim","Year and trim",15],["history","History",15],["logistics","Logistics",15]];
 
 const CUR=META.current;
@@ -391,6 +416,7 @@ function render(){
           <div class="fact"><dt>Vs. est. market</dt><dd>${pctTxt}<span class="aux">market about ${fmt(d.exp)}</span></dd></div>
           <div class="fact"><dt>Miles</dt><dd>${mi(d.mi)}<span class="aux">about ${mi(d.mpy)} a year</span></dd></div>
           <div class="fact"><dt>Est. out the door</dt><dd class="otd" data-id="${d.id}">${fmt(otd(d))}</dd></div>
+          <div class="fact"><dt>Est. payment</dt><dd>${fmt(payment(d))}/mo<span class="aux">${termTxt()}</span></dd></div>
         </dl>
         <ul class="hist">${hist}</ul>
         <div class="links"><span class="vin">VIN <b>${d.vin}</b></span><a class="lk primary" href="${d.url}" target="_blank" rel="noopener">View listing on TrueCar</a><a class="lk" href="https://www.nhtsa.gov/recalls?vin=${d.vin}" target="_blank" rel="noopener">Check recalls</a></div>
@@ -416,7 +442,7 @@ document.addEventListener("click",e=>{
   b.setAttribute("aria-expanded",String(!open)); det.hidden=open;
   b.textContent= open ? "Why this score" : "Hide details";
 });
-["f-where","f-price","f-miles","f-year","f-trim","f-change","f-sort","a-tax","a-doc"].forEach(id=>$(id).addEventListener("input",render));
+["f-where","f-price","f-miles","f-year","f-trim","f-change","f-sort","a-tax","a-doc","a-down","a-apr","a-term"].forEach(id=>$(id).addEventListener("input",render));
 
 const Q="toyota tundra crewmax";
 const cl=(sub)=>`https://${sub}.craigslist.org/search/cta?query=${encodeURIComponent(Q)}&min_auto_year=2014&max_auto_year=2021&max_price=35000&auto_drivetrain=3`;
