@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tundra Hunt: 84005</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --paper:#eef1f0; --surface:#ffffff; --ink:#1c2226; --muted:#5d686e; --line:#c8d0cf; --soft:#e2e7e5;
+  --accent:#56603f; --accent-ink:#ffffff;
+  --strong:#2e6b46; --good:#4d7a2a; --fair:#9a6a14; --pass:#9b3b2c; --warn-bg:#f7e7d9;
+  --body:"Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --cond:"Barlow Condensed", "Arial Narrow", "Roboto Condensed", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141819; --surface:#1c2225; --ink:#e6eae8; --muted:#9ba6a9; --line:#343e41; --soft:#252d30;
+    --accent:#a9b67e; --accent-ink:#141819;
+    --strong:#7fcf9b; --good:#a8cf74; --fair:#e2b759; --pass:#e98b78; --warn-bg:#3a2a1f;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141819; --surface:#1c2225; --ink:#e6eae8; --muted:#9ba6a9; --line:#343e41; --soft:#252d30;
+  --accent:#a9b67e; --accent-ink:#141819;
+  --strong:#7fcf9b; --good:#a8cf74; --fair:#e2b759; --pass:#e98b78; --warn-bg:#3a2a1f;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.5 var(--body)}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:28px 18px 64px}
+
+/* Sticker header */
+.sticker{background:var(--surface);border:2px solid var(--ink);border-radius:4px}
+.sticker-top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;padding:18px 20px 14px;border-bottom:2px solid var(--ink)}
+h1{font:700 clamp(2rem,5.5vw,3.2rem)/0.95 var(--cond);margin:0;letter-spacing:-0.01em}
+.sub{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+.checked{font:500 0.95rem/1.2 var(--cond);color:var(--muted)}
+.specs{display:grid;grid-template-columns:repeat(4,1fr)}
+.spec{padding:12px 20px;border-right:1px solid var(--line)}
+.spec:last-child{border-right:0}
+.spec dt{font-size:0.8rem;color:var(--muted)}
+.spec dd{margin:2px 0 0;font:600 1.25rem/1.15 var(--cond)}
+@media (max-width:720px){.specs{grid-template-columns:1fr 1fr}.spec:nth-child(2){border-right:0}.spec:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+.lede{max-width:68ch;margin:22px 2px 6px;color:var(--ink)}
+.lede strong{font-weight:600}
+
+/* Controls */
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:flex-end;margin:22px 0 10px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:0.82rem;color:var(--muted)}
+.ctl select,.ctl input[type=number]{font:500 0.95rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;min-width:0}
+.ctl input[type=number]{width:6.5em}
+.ctl input[type=range]{accent-color:var(--accent);width:150px}
+.ctl output{font:600 0.95rem var(--cond);color:var(--ink)}
+.count{margin-left:auto;font:600 1rem var(--cond);color:var(--muted)}
+
+/* Results */
+ol.results{list-style:none;margin:0;padding:0}
+.truck{display:grid;grid-template-columns:96px 1fr;gap:4px 18px;padding:18px 0;border-bottom:1px solid var(--line)}
+.gauge{grid-row:span 2;display:flex;flex-direction:column;align-items:center}
+.gauge svg{width:96px;height:62px;display:block}
+.gauge .num{font:700 2.1rem/1 var(--cond);margin-top:-30px}
+.gauge .band{font:600 0.85rem/1.2 var(--cond);margin-top:4px}
+.head{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px}
+.head h2{font:700 1.55rem/1.1 var(--cond);margin:0}
+.src{font:600 0.8rem/1 var(--cond);padding:4px 7px;border-radius:3px;border:1px solid var(--line);color:var(--muted)}
+.src.local{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.where{color:var(--muted);font-size:0.95rem;width:100%}
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px 18px;margin:10px 0 8px}
+.fact dt{font-size:0.78rem;color:var(--muted)}
+.fact dd{margin:1px 0 0;font:600 1.15rem/1.2 var(--cond)}
+.fact .aux{display:block;font:400 0.82rem/1.3 var(--body);color:var(--muted)}
+.fact s{color:var(--muted);font-weight:500;font-size:0.9rem;margin-left:4px}
+.under{color:var(--strong)} .over{color:var(--pass)}
+@media (max-width:720px){.facts{grid-template-columns:1fr 1fr}.truck{grid-template-columns:72px 1fr}.gauge svg{width:72px;height:48px}.gauge .num{font-size:1.7rem;margin-top:-24px}}
+.hist{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 0;padding:0;list-style:none;font-size:0.85rem}
+.hist li{padding:2px 8px;border-radius:999px;background:var(--soft)}
+.hist li.yes::before{content:"✓ ";color:var(--strong);font-weight:700}
+.hist li.unk{color:var(--muted)}
+.hist li.unk::before{content:"? ";font-weight:700}
+.src.trip{border-color:var(--accent);color:var(--accent)}
+.links{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:10px 0 0}
+.vin{font-size:0.85rem;color:var(--muted)}
+.vin b{font:600 0.95rem var(--body);color:var(--ink);letter-spacing:0.04em;font-variant-numeric:tabular-nums;user-select:all}
+.lk{font:600 0.95rem var(--cond);color:var(--ink);text-underline-offset:3px}
+.lk.primary{background:var(--ink);color:var(--surface);padding:5px 10px;border-radius:3px;text-decoration:none}
+.lk.primary:hover{background:var(--accent);color:var(--accent-ink)}
+section.more-sites{margin-top:40px}
+section.more-sites h2{font:700 1.4rem/1.1 var(--cond);margin:0 0 6px}
+section.more-sites > p{font-size:0.93rem;max-width:70ch;margin:0 0 14px}
+.leads{list-style:none;margin:0 0 22px;padding:0;border-top:1px solid var(--line)}
+.leads li{display:grid;grid-template-columns:1fr auto;gap:2px 16px;padding:10px 0;border-bottom:1px solid var(--line)}
+.leads .t{font:600 1.1rem/1.2 var(--cond)}
+.leads .m{font-size:0.85rem;color:var(--muted)}
+.leads .p{font:700 1.2rem var(--cond);grid-row:span 2;align-self:center}
+.sites{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.site{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:12px 14px}
+.site h3{font:600 1.1rem var(--cond);margin:0 0 2px}
+.site p{font-size:0.85rem;color:var(--muted);margin:0 0 8px}
+.site .chips{display:flex;flex-wrap:wrap;gap:6px}
+.site .chips a{font:600 0.88rem var(--cond);padding:3px 8px;border:1px solid var(--line);border-radius:999px;text-decoration:none;color:var(--ink)}
+.site .chips a:hover{border-color:var(--accent);color:var(--accent)}
+.refresh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:18px;margin:18px 0 0;padding:14px 18px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--accent);border-radius:4px}
+@media (max-width:720px){.refresh{grid-template-columns:1fr}}
+.refresh h2{font:700 1.35rem/1.1 var(--cond);margin:0}
+.refresh p{margin:4px 0 8px;font-size:0.92rem}
+.rf-stats{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px 16px;font-size:0.9rem;color:var(--muted)}
+.rf-stats b{font:700 1.25rem var(--cond);color:var(--ink);margin-right:3px}
+.rf-prompt{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.rf-prompt code{font:600 1rem var(--body);padding:6px 10px;background:var(--soft);border-radius:3px}
+.rf-prompt button{font:600 0.95rem var(--cond);background:var(--ink);color:var(--surface);border:0;border-radius:3px;padding:7px 12px;cursor:pointer}
+.rf-prompt button:hover{background:var(--accent);color:var(--accent-ink)}
+.hist li.chg{font-weight:600}
+.hist li.new{background:var(--accent);color:var(--accent-ink)}
+.hist li.drop{background:var(--strong);color:var(--surface)}
+.hist li.rise{background:var(--pass);color:var(--surface)}
+.leads li.none{display:block;color:var(--muted);font-size:0.92rem}
+.warn{margin:10px 0 0;padding:8px 12px;border-left:4px solid var(--pass);background:var(--warn-bg);font-size:0.92rem}
+.more{grid-column:2}
+.toggle{margin-top:10px;font:600 0.95rem var(--cond);background:none;border:0;padding:4px 0;color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:18px;margin-top:10px;padding:14px;background:var(--surface);border:1px solid var(--line);border-radius:4px}
+.detail[hidden]{display:none}
+@media (max-width:720px){.detail{grid-template-columns:1fr}.more{grid-column:1 / -1}}
+.bars{margin:0;padding:0;list-style:none}
+.bars li{display:grid;grid-template-columns:7.5em 1fr 3.4em;align-items:center;gap:8px;font-size:0.85rem;margin-bottom:6px}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.bars b{font:600 0.95rem var(--cond);text-align:right}
+.detail h3{font:600 1.05rem var(--cond);margin:0 0 6px}
+.detail ul.notes{margin:0 0 10px;padding-left:1.1em;font-size:0.92rem}
+.detail ul.notes li{margin-bottom:4px}
+.feat{font-size:0.85rem;color:var(--muted);margin:0 0 10px}
+.view{font:600 0.95rem var(--cond);color:var(--ink)}
+.empty{padding:28px 0;color:var(--muted)}
+
+/* Bottom */
+section.info{margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+@media (max-width:720px){section.info{grid-template-columns:1fr}}
+.info h2{font:700 1.4rem/1.1 var(--cond);margin:0 0 8px}
+.info p,.info li{font-size:0.93rem;max-width:62ch}
+.info ul{padding-left:1.1em;margin:0}
+.info li{margin-bottom:6px}
+.fine{margin-top:28px;font-size:0.82rem;color:var(--muted);max-width:80ch}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="sticker">
+    <div class="sticker-top">
+      <div>
+        <h1>Tundra CrewMax 4x4, 5.7L V8</h1>
+        <p class="sub">Used trucks from Las Vegas to Boise, ranked by how good a deal each one is.</p>
+      </div>
+      <div class="checked" id="checked"></div>
+    </div>
+    <dl class="specs">
+      <div class="spec"><dt>Home base</dt><dd>84005, Eagle Mountain</dd></div>
+      <div class="spec"><dt>Travel range</dt><dd>Las Vegas to Boise</dd></div>
+      <div class="spec"><dt>Years and price</dt><dd>2014 to 2021, up to $35k</dd></div>
+      <div class="spec"><dt>Trucks found</dt><dd id="found">0</dd></div>
+    </dl>
+  </header>
+
+  <p class="lede">Every dealer truck below links to its listing and shows its VIN, so you can run a history report or <a href="https://www.nhtsa.gov/recalls" target="_blank" rel="noopener">recall check</a> before you call. It includes the Wasatch Front, road trips inside your Las Vegas to Boise range, and CarMax stores that will ship to Utah. Private-party sites like KSL, Craigslist and Facebook Marketplace can't be scored the same way, so they're at the bottom as leads and ready-made searches.</p>
+
+  <section class="refresh" aria-labelledby="rf-h">
+    <div class="rf-main">
+      <h2 id="rf-h">Refresh <span id="rf-n"></span></h2>
+      <p id="rf-date"></p>
+      <ul class="rf-stats" id="rf-stats"></ul>
+    </div>
+    <div class="rf-how">
+      <p>This page can't reach car sites on its own. To refresh it, send Claude this message; you'll get updated listings at this same link.</p>
+      <div class="rf-prompt"><code id="rf-text">Refresh the Tundra hunt</code><button type="button" id="rf-copy">Copy message</button></div>
+    </div>
+  </section>
+
+  <div class="controls" role="group" aria-label="Filter trucks">
+    <label class="ctl">Where
+      <select id="f-where">
+        <option value="all">Everything</option>
+        <option value="local">Wasatch Front only</option>
+        <option value="range">Within my travel range</option>
+        <option value="trip">Road trips only</option>
+        <option value="transfer">CarMax transfers only</option>
+      </select>
+    </label>
+    <label class="ctl">Max total price <output id="o-price">$38,500</output>
+      <input id="f-price" type="range" min="24000" max="38500" step="500" value="38500">
+    </label>
+    <label class="ctl">Max miles
+      <select id="f-miles">
+        <option value="999999">Any</option>
+        <option value="150000">150k</option>
+        <option value="125000">125k</option>
+        <option value="100000">100k</option>
+        <option value="75000">75k</option>
+      </select>
+    </label>
+    <label class="ctl">Newest years
+      <select id="f-year">
+        <option value="2014">2014 and up</option>
+        <option value="2016">2016 and up</option>
+        <option value="2018">2018 and up (safety tech)</option>
+        <option value="2020">2020 and up (CarPlay)</option>
+      </select>
+    </label>
+    <label class="ctl">Trim
+      <select id="f-trim">
+        <option value="any">Any</option>
+        <option value="0">SR5</option>
+        <option value="1">Limited</option>
+        <option value="2">Platinum / 1794</option>
+      </select>
+    </label>
+    <label class="ctl">Show
+      <select id="f-change">
+        <option value="all">All trucks</option>
+        <option value="changed">Changed since last refresh</option>
+        <option value="new">New since last refresh</option>
+        <option value="drop">Price dropped</option>
+      </select>
+    </label>
+    <label class="ctl">Sort by
+      <select id="f-sort">
+        <option value="score">Deal score</option>
+        <option value="otd">Out-the-door price</option>
+        <option value="miles">Miles</option>
+        <option value="year">Newest first</option>
+        <option value="dist">Closest first</option>
+      </select>
+    </label>
+    <span class="count" id="count" aria-live="polite"></span>
+  </div>
+
+  <ol class="results" id="results"></ol>
+
+
+  <section class="more-sites">
+    <h2>Sold or removed since last refresh</h2>
+    <p>Trucks that were on the list last time but no longer show up. Watching this tells you how fast this spec moves.</p>
+    <ul class="leads" id="gone"></ul>
+
+    <h2>Private-party and classified leads</h2>
+    <p>These came up on Craigslist around Boise. Craigslist doesn't show VINs or history in search results, so they aren't scored; confirm the cab, 4x4, engine and miles before you drive. If a link has expired, use the Craigslist searches below.</p>
+    <ul class="leads">
+      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2015-toyota-tundra-1794/htnRSZTZdPtMJ143t9XjWa" target="_blank" rel="noopener">2015 Tundra 1794 Edition CrewMax 4WD</a></span><span class="p">$27,995</span><span class="m">Bargain Auto Sales, Garden City, ID. Miles not shown in search.</span></li>
+      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2015-toyota-tundra-crewmax/k5coEPBiSXtVs4tHJbCFLR" target="_blank" rel="noopener">2015 Tundra CrewMax Limited 5.7L 4x4</a></span><span class="p">$25,995</span><span class="m">Boise Auto Group, Boise, ID. Miles not shown in search.</span></li>
+      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2014-toyota-tundra-crew-4x4-trd/6sZ1zjCzMsqXYg2Fo5uJ6U" target="_blank" rel="noopener">2014 Tundra Crew 4x4 TRD 5.7L, 59,539 miles</a></span><span class="p">$34,995</span><span class="m">usaworktrucks.com, Boise, ID. Confirm it's a CrewMax, not a Double Cab.</span></li>
+      <li><span class="t"><a href="https://www.craigslist.org/view/d/boise-2014-toyota-tundra-sr5-92k-miles/hbtfVhsWZXaKpPLyqabCZL" target="_blank" rel="noopener">2014 Tundra SR5, 92k miles</a></span><span class="p">$25,995</span><span class="m">TT Auto Sales, Boise, ID. Cab and drivetrain not stated.</span></li>
+    </ul>
+
+    <h2>Search more sites</h2>
+    <p>Each button opens a live search on that site, pre-filled for a 2014 to 2021 Tundra under $35k where the site allows it. Add "CrewMax" and "4x4" filters on the site if they don't carry over.</p>
+    <div class="sites" id="sites"></div>
+  </section>
+
+  <section class="info">
+    <div>
+      <h2>How the deal score works</h2>
+      <p>Each truck is scored out of 100 from five parts. Price against market is worth 35 points, and compares the asking price plus any transfer fee with an estimate built from 76 CrewMax 4x4 5.7L asking prices seen in this search, adjusted for year, miles and trim. Miles for its age is worth 20, year and trim 15, history 15 (no accidents, clean title, one owner), and logistics 15 (close local dealers score highest; transfers and long drives score lower).</p>
+      <p>Over 70 is a strong deal, 62 to 69 good, 52 to 61 fair, and anything lower is a pass unless something else makes it special. A price far below market with no clean-title record gets capped and flagged.</p>
+      <h2 style="margin-top:18px">Out-the-door estimate</h2>
+      <div class="controls" style="margin:6px 0 0;border:0;padding:0">
+        <label class="ctl">Sales tax %
+          <input id="a-tax" type="number" min="0" max="12" step="0.05" value="7.25">
+        </label>
+        <label class="ctl">Doc fee $
+          <input id="a-doc" type="number" min="0" max="2000" step="25" value="499">
+        </label>
+      </div>
+      <p class="fine" style="margin-top:8px">Both are rough Utah defaults; edit them to match your quote. Registration and title fees aren't included.</p>
+    </div>
+    <div>
+      <h2>What to check on any 2014 to 2021 5.7L</h2>
+      <ul>
+        <li>Secondary air injection pump and valves. This is the common big-ticket 5.7L failure, more likely in cold winters. Scan for codes and ask if it's been replaced.</li>
+        <li>Water pump seepage around 100k and up. Look for pink crust at the front of the engine.</li>
+        <li>Frame and underbody rust. Utah salts its roads, so look hard at the frame, brake lines and spare tire hanger.</li>
+        <li>Transmission fluid service records past 100k miles.</li>
+        <li>Open recalls. Plug the VIN into nhtsa.gov/recalls before you buy.</li>
+        <li>The 5.7L uses a timing chain, so there's no belt job coming. Flex-fuel (FFV) trucks run fine on regular gas.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="fine">Prices, miles and history badges come from TrueCar listings as of Oct 9, 2026 and can change or sell at any time. "No accidents" and "Clean title" reflect TrueCar's AutoCheck data; a question mark means the listing didn't say. Trims marked "from VIN" were decoded from the VIN because the listing didn't name them. Distances from 84005 are approximate driving miles. Craigslist leads and site searches are unverified and change constantly. This is a shopping aid, not an appraisal or financial advice.</p>
+</div>
+
+<script>
+const PAYLOAD = {"meta": {"refreshes": [{"n": 1, "date": "Oct 9, 2026", "note": "First search"}, {"n": 2, "date": "Oct 9, 2026", "note": "Same-day re-check of TrueCar and CarMax listings"}], "current": 2, "removed": []}, "trucks": [{"id": 0, "yr": 2017, "trim": "Platinum", "tier": 2, "vinTrim": false, "mi": 88939, "price": 34199, "prev": null, "fee": 0, "feeKnown": true, "total": 34199, "exp": 38600, "pct": 11.4, "mpy": 8800, "seller": "Honda West", "city": "Las Vegas, NV", "dist": 420, "kind": "trip", "region": "Las Vegas", "acc": true, "clean": true, "owner": false, "tc": "Excellent", "vin": "5TFAW5F18HX588068", "feat": ["Cooled + heated seats", "Moonroof", "Navigation", "Blind spot monitor", "Parking sensors", "Premium audio", "Flex-fuel"], "notes": ["Top trim under 90k miles, priced under $35k, with no accidents and a clean title.", "Desert truck from a Honda store, so expect less underbody rust than a Utah truck. Still check the bed liner and interior for sun damage.", "About a 6-hour drive each way; call ahead to confirm it's still there and get an out-the-door quote."], "warn": null, "score": 73, "parts": {"price": 31.4, "miles": 16.9, "yeartrim": 7.9, "history": 12, "logistics": 4.8}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAW5F18HX588068/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 34199], [2, 34199]]}, {"id": 1, "yr": 2014, "trim": "Platinum", "tier": 2, "vinTrim": false, "mi": 134622, "price": 26558, "prev": null, "fee": 0, "feeKnown": null, "total": 26558, "exp": 28700, "pct": 7.4, "mpy": 10300, "seller": "RC Automotive", "city": "Salt Lake City, UT", "dist": 38, "kind": "local", "region": "Wasatch Front", "acc": true, "clean": true, "owner": false, "tc": "Excellent", "vin": "5TFAW5F14EX353310", "feat": ["Cooled + heated seats", "Moonroof", "Navigation", "JBL audio", "Flex-fuel"], "notes": ["The only top-trim truck in your mid-$20s target, with cooled seats, moonroof, navigation and premium audio.", "At 134k miles, ask for receipts on transmission fluid and the water pump.", "Independent lot: have a Toyota shop do a pre-purchase inspection."], "warn": null, "score": 72, "parts": {"price": 27.4, "miles": 15.3, "yeartrim": 4.0, "history": 12, "logistics": 13.1}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAW5F14EX353310/2014-toyota-tundra/", "firstSeen": 1, "hist": [[1, 26558], [2, 26558]]}, {"id": 2, "yr": 2017, "trim": "Platinum / 1794", "tier": 2, "vinTrim": true, "mi": 104048, "price": 32998, "prev": null, "fee": 249, "feeKnown": true, "total": 33247, "exp": 36400, "pct": 8.7, "mpy": 10400, "seller": "CarMax Vancouver", "city": "Vancouver, WA", "dist": 780, "kind": "transfer", "region": "CarMax transfer", "acc": null, "clean": true, "owner": true, "tc": null, "vin": "5TFAY5F1XHX650239", "feat": [], "notes": ["Platinum or 1794 Edition (the VIN doesn't separate them) at roughly SR5 money.", "One owner, clean title. No accident report shown."], "warn": null, "score": 70, "parts": {"price": 28.7, "miles": 15.2, "yeartrim": 7.9, "history": 11, "logistics": 7.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAY5F1XHX650239/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 32998], [2, 32998]]}, {"id": 3, "yr": 2014, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 57916, "price": 32190, "prev": 32913, "fee": 0, "feeKnown": null, "total": 32190, "exp": 34600, "pct": 7.1, "mpy": 4400, "seller": "Murdock Hyundai Lindon", "city": "Lindon, UT", "dist": 24, "kind": "local", "region": "Wasatch Front", "acc": null, "clean": true, "owner": false, "tc": "Fair", "vin": "5TFDW5F1XEX343880", "feat": ["Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["Very low miles for a 12-year-old truck. Ask for the service history and why it sat so much.", "Sitting on a Hyundai lot, where trucks often move for less. Already reduced from $32,913.", "TrueCar shows a clean title but no accident report either way, so pull a Carfax before you go."], "warn": null, "score": 69, "parts": {"price": 27.1, "miles": 20, "yeartrim": 0.0, "history": 8, "logistics": 14.2}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F1XEX343880/2014-toyota-tundra/", "firstSeen": 1, "hist": [[1, 32190], [2, 32190]]}, {"id": 4, "yr": 2020, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 93994, "price": 36998, "prev": null, "fee": 249, "feeKnown": true, "total": 37247, "exp": 38400, "pct": 3.0, "mpy": 13300, "seller": "CarMax Serramonte", "city": "Colma, CA", "dist": 750, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": true, "tc": "Fair", "vin": "5TFDY5F1XLX885231", "feat": ["Apple CarPlay / Android Auto", "Blind spot monitor", "Navigation", "Parking sensors"], "notes": ["One owner, no accidents, 2020 tech (CarPlay, blind spot monitor).", "A stretch at about $37.2k with transfer."], "warn": null, "score": 67, "parts": {"price": 23.0, "miles": 11.9, "yeartrim": 9.7, "history": 15, "logistics": 7.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F1XLX885231/2020-toyota-tundra/", "firstSeen": 1, "hist": [[1, 36998], [2, 36998]]}, {"id": 5, "yr": 2017, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 124138, "price": 28789, "prev": 29206, "fee": 0, "feeKnown": null, "total": 28789, "exp": 30300, "pct": 4.9, "mpy": 12400, "seller": "Performance Toyota Bountiful", "city": "Bountiful, UT", "dist": 46, "kind": "local", "region": "Wasatch Front", "acc": true, "clean": true, "owner": false, "tc": "Great", "vin": "5TFDY5F18HX663973", "feat": ["Backup camera", "Tow hitch"], "notes": ["Toyota dealer with a recent cut from $29,206, which suggests some room left to negotiate.", "No accidents reported and a clean title.", "2017 means no Apple CarPlay. An aftermarket head unit fixes that for a few hundred dollars."], "warn": null, "score": 66, "parts": {"price": 24.9, "miles": 13.0, "yeartrim": 3.9, "history": 12, "logistics": 12.4}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F18HX663973/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 28789], [2, 28789]]}, {"id": 6, "yr": 2021, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 49748, "price": 35745, "prev": null, "fee": 0, "feeKnown": null, "total": 35745, "exp": 47400, "pct": 24.7, "mpy": 8200, "seller": "Autolocity Motors", "city": "Ogden, UT", "dist": 75, "kind": "local", "region": "Wasatch Front", "acc": null, "clean": null, "owner": true, "tc": "High", "vin": "5TFDY5F15MX005098", "feat": ["Apple CarPlay / Android Auto", "Blind spot monitor", "Navigation", "Parking sensors"], "notes": ["About 25% under the estimated market for a 2021 with 50k miles. A gap that big usually means a branded title or past damage.", "TrueCar shows neither a clean title nor an accident report for this one. Run the VIN on Carfax or AutoCheck before anything else."], "warn": "Price is far below market with no clean-title record. Verify the title before you go see it.", "score": 65, "parts": {"price": 20, "miles": 17.6, "yeartrim": 11.0, "history": 6, "logistics": 10.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F15MX005098/2021-toyota-tundra/", "firstSeen": 1, "hist": [[1, 35745], [2, 35745]]}, {"id": 7, "yr": 2021, "trim": "Platinum", "tier": 2, "vinTrim": false, "mi": 123658, "price": 37998, "prev": null, "fee": 149, "feeKnown": true, "total": 38147, "exp": 39700, "pct": 3.9, "mpy": 20400, "seller": "CarMax Victorville", "city": "Victorville, CA", "dist": 600, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": true, "tc": "Fair", "vin": "5TFAY5F12MX966650", "feat": ["Cooled + heated seats", "Moonroof", "Apple CarPlay / Android Auto", "Blind spot monitor", "Navigation", "Remote start"], "notes": ["Final-year 5.7L Platinum with every option, one owner, no accidents.", "A stretch at about $38.1k, and 124k miles in 5 years is high use."], "warn": null, "score": 65, "parts": {"price": 23.9, "miles": 4.1, "yeartrim": 15, "history": 15, "logistics": 7.4}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAY5F12MX966650/2021-toyota-tundra/", "firstSeen": 1, "hist": [[1, 37998], [2, 37998]]}, {"id": 8, "yr": 2017, "trim": "SR5", "tier": 0, "vinTrim": true, "mi": 70487, "price": 34998, "prev": null, "fee": 249, "feeKnown": true, "total": 35247, "exp": 37300, "pct": 5.4, "mpy": 7000, "seller": "CarMax Capitol Expressway", "city": "San Jose, CA", "dist": 740, "kind": "transfer", "region": "CarMax transfer", "acc": null, "clean": true, "owner": false, "tc": null, "vin": "5TFDY5F17HX622363", "feat": [], "notes": ["Low miles for a 2017 (about 7.5k a year).", "Trim decoded from VIN; no accident report shown, so pull a Carfax."], "warn": null, "score": 63, "parts": {"price": 25.4, "miles": 18.9, "yeartrim": 3.9, "history": 8, "logistics": 7.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F17HX622363/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 34998], [2, 34998]]}, {"id": 9, "yr": 2016, "trim": "Limited", "tier": 1, "vinTrim": false, "mi": 87713, "price": 35798, "prev": null, "fee": 0, "feeKnown": true, "total": 35798, "exp": 37700, "pct": 5.2, "mpy": 7900, "seller": "Centennial Toyota", "city": "Las Vegas, NV", "dist": 420, "kind": "trip", "region": "Las Vegas", "acc": null, "clean": true, "owner": true, "tc": "High", "vin": "5TFHW5F17GX508692", "feat": ["Heated leather seats", "Navigation", "Premium audio", "Flex-fuel"], "notes": ["One owner, clean title, reasonable miles; a Toyota store, so ask for its service records.", "Slightly over the $35k ceiling and TrueCar rates it a high price, so there should be room to negotiate.", "No accident report shown on TrueCar."], "warn": null, "score": 63, "parts": {"price": 25.2, "miles": 17.9, "yeartrim": 4.6, "history": 11, "logistics": 4.8}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFHW5F17GX508692/2016-toyota-tundra/", "firstSeen": 1, "hist": [[1, 35798], [2, 35798]]}, {"id": 10, "yr": 2017, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 114847, "price": 31500, "prev": null, "fee": 0, "feeKnown": null, "total": 31500, "exp": 31400, "pct": -0.4, "mpy": 11400, "seller": "Summit Trucks", "city": "Centerville, UT", "dist": 50, "kind": "local", "region": "Wasatch Front", "acc": true, "clean": true, "owner": false, "tc": "High", "vin": "5TFDY5F12HX602750", "feat": ["Backup camera", "Tow hitch"], "notes": ["Priced right at market, so treat the sticker as a starting point.", "TrueCar rates it a high price. Use the Bountiful 2017 with more miles at $28,789 as leverage."], "warn": null, "score": 62, "parts": {"price": 19.6, "miles": 14.0, "yeartrim": 3.9, "history": 12, "logistics": 12.1}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F12HX602750/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 31500], [2, 31500]]}, {"id": 11, "yr": 2015, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 96895, "price": 30998, "prev": null, "fee": 0, "feeKnown": true, "total": 30998, "exp": 31000, "pct": 0.1, "mpy": 8000, "seller": "CarMax South Broadway", "city": "Littleton, CO", "dist": 500, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": true, "tc": "High", "vin": "5TFDW5F10FX451992", "feat": ["Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["One owner, no accidents, clean title.", "CarMax transfer to Utah was listed at $0 for this Colorado store."], "warn": null, "score": 62, "parts": {"price": 20.1, "miles": 17.8, "yeartrim": 1.3, "history": 15, "logistics": 8.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F10FX451992/2015-toyota-tundra/", "firstSeen": 1, "hist": [[1, 30998], [2, 30998]]}, {"id": 12, "yr": 2017, "trim": "Platinum / 1794", "tier": 2, "vinTrim": true, "mi": 94240, "price": 36998, "prev": null, "fee": 0, "feeKnown": true, "total": 36998, "exp": 37800, "pct": 2.2, "mpy": 9400, "seller": "CarMax South Broadway", "city": "Littleton, CO", "dist": 500, "kind": "transfer", "region": "CarMax transfer", "acc": null, "clean": true, "owner": false, "tc": null, "vin": "5TFAW5F19HX642610", "feat": ["Flex-fuel"], "notes": ["Platinum or 1794 Edition decoded from VIN; $0 transfer.", "Just over the $35k ceiling."], "warn": null, "score": 62, "parts": {"price": 22.2, "miles": 16.3, "yeartrim": 7.9, "history": 8, "logistics": 8.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAW5F19HX642610/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 36998], [2, 36998]]}, {"id": 13, "yr": 2016, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 86066, "price": 34998, "prev": null, "fee": 0, "feeKnown": true, "total": 34998, "exp": 33700, "pct": -3.9, "mpy": 7800, "seller": "CarMax Parker", "city": "Parker, CO", "dist": 510, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": true, "tc": "High", "vin": "5TFDW5F1XGX517093", "feat": ["Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["One owner, no accidents, clean title, $0 transfer.", "About 4% over the estimated market; CarMax prices are no-haggle."], "warn": null, "score": 60, "parts": {"price": 16.1, "miles": 18.0, "yeartrim": 2.6, "history": 15, "logistics": 8.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F1XGX517093/2016-toyota-tundra/", "firstSeen": 1, "hist": [[1, 34998], [2, 34998]]}, {"id": 14, "yr": 2018, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 98804, "price": 35919, "prev": null, "fee": 0, "feeKnown": true, "total": 35919, "exp": 34800, "pct": -3.3, "mpy": 10900, "seller": "Corwin Ford Nampa", "city": "Nampa, ID", "dist": 370, "kind": "trip", "region": "Boise area", "acc": true, "clean": true, "owner": true, "tc": "Fair", "vin": "5TFDY5F16JX751832", "feat": ["Adaptive cruise", "Lane keep assist", "Backup camera", "Tow hitch"], "notes": ["One owner, no accidents, under 100k miles.", "Idaho dealer prices run high for this spec; this is one of the few near your ceiling.", "Idaho also salts roads, so check the frame."], "warn": null, "score": 59, "parts": {"price": 16.7, "miles": 14.6, "yeartrim": 7.1, "history": 15, "logistics": 5.4}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F16JX751832/2018-toyota-tundra/", "firstSeen": 1, "hist": [[1, 35919], [2, 35919]]}, {"id": 15, "yr": 2017, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 83181, "price": 36998, "prev": null, "fee": 0, "feeKnown": true, "total": 36998, "exp": 35500, "pct": -4.3, "mpy": 8300, "seller": "CarMax West Sahara", "city": "Las Vegas, NV", "dist": 420, "kind": "trip", "region": "Las Vegas", "acc": true, "clean": true, "owner": true, "tc": "Fair", "vin": "5TFDW5F11HX673864", "feat": ["Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["One owner, no accidents, clean title. CarMax prices are no-haggle.", "Inside your travel range, so you can drive down and buy it on the lot without a transfer fee."], "warn": null, "score": 57, "parts": {"price": 15.7, "miles": 17.5, "yeartrim": 3.9, "history": 15, "logistics": 4.8}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F11HX673864/2017-toyota-tundra/", "firstSeen": 1, "hist": [[1, 36998], [2, 36998]]}, {"id": 16, "yr": 2020, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 141189, "price": 32594, "prev": null, "fee": 0, "feeKnown": null, "total": 32594, "exp": 32000, "pct": -1.8, "mpy": 20000, "seller": "Dealer World", "city": "American Fork, UT", "dist": 17, "kind": "local", "region": "Wasatch Front", "acc": null, "clean": true, "owner": false, "tc": "High", "vin": "5TFDY5F17LX941755", "feat": ["Apple CarPlay / Android Auto", "Blind spot monitor", "Remote start", "Adaptive cruise"], "notes": ["Newest tech in budget (CarPlay and Android Auto arrived for 2020), but 141k miles in about 6 years is heavy use.", "Likely highway miles; ask for the maintenance log and check the tires and brakes."], "warn": null, "score": 55, "parts": {"price": 18.2, "miles": 4.6, "yeartrim": 9.7, "history": 8, "logistics": 14.8}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F17LX941755/2020-toyota-tundra/", "firstSeen": 1, "hist": [[1, 32594], [2, 32594]]}, {"id": 17, "yr": 2015, "trim": "SR5", "tier": 0, "vinTrim": true, "mi": 106255, "price": 30998, "prev": null, "fee": 0, "feeKnown": true, "total": 30998, "exp": 29900, "pct": -3.6, "mpy": 8800, "seller": "CarMax West 104th Ave", "city": "Federal Heights, CO", "dist": 490, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": false, "tc": null, "vin": "5TFDY5F10FX461447", "feat": [], "notes": ["Trim decoded from the VIN as SR5-grade; confirm on the listing.", "No accidents, clean title, $0 transfer from this Colorado store."], "warn": null, "score": 55, "parts": {"price": 16.4, "miles": 16.9, "yeartrim": 1.3, "history": 12, "logistics": 8.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F10FX461447/2015-toyota-tundra/", "firstSeen": 1, "hist": [[1, 30998], [2, 30998]]}, {"id": 18, "yr": 2018, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 129857, "price": 31790, "prev": null, "fee": 0, "feeKnown": null, "total": 31790, "exp": 30800, "pct": -3.1, "mpy": 14300, "seller": "Tony Divino Toyota", "city": "Riverdale, UT", "dist": 70, "kind": "local", "region": "Wasatch Front", "acc": null, "clean": true, "owner": false, "tc": "Great", "vin": "5TFDY5F12JX762987", "feat": ["Adaptive cruise", "Lane keep assist", "Tow hitch"], "notes": ["2018 is the first year with Toyota Safety Sense standard (adaptive cruise, lane departure, auto high beams).", "No accident report on TrueCar. Get the Carfax before making the 70-mile drive."], "warn": null, "score": 53, "parts": {"price": 16.9, "miles": 10.8, "yeartrim": 7.1, "history": 8, "logistics": 10.4}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F12JX762987/2018-toyota-tundra/", "firstSeen": 1, "hist": [[1, 31790], [2, 31790]]}, {"id": 19, "yr": 2019, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 112197, "price": 34892, "prev": null, "fee": 0, "feeKnown": true, "total": 34892, "exp": 34400, "pct": -1.5, "mpy": 13900, "seller": "Auto Passion Team", "city": "Hurricane, UT", "dist": 265, "kind": "trip", "region": "Southern Utah", "acc": null, "clean": true, "owner": false, "tc": "Fair", "vin": "5TFDW5F17KX800544", "feat": ["Adaptive cruise", "Lane keep assist", "Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["Newest SR5 in budget within your travel range, with Toyota Safety Sense.", "No accident report shown; pull a Carfax before the 4-hour drive."], "warn": null, "score": 53, "parts": {"price": 18.5, "miles": 11.3, "yeartrim": 8.4, "history": 8, "logistics": 6.7}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F17KX800544/2019-toyota-tundra/", "firstSeen": 1, "hist": [[1, 34892], [2, 34892]]}, {"id": 20, "yr": 2018, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 92749, "price": 36594, "prev": null, "fee": 0, "feeKnown": true, "total": 36594, "exp": 35600, "pct": -2.8, "mpy": 10200, "seller": "Treasure Valley Subaru", "city": "Nampa, ID", "dist": 370, "kind": "trip", "region": "Boise area", "acc": null, "clean": true, "owner": false, "tc": "Fair", "vin": "5TFDY5F13JX714060", "feat": ["Adaptive cruise", "Lane keep assist", "Backup camera", "Tow hitch"], "notes": ["Clean title, under 100k miles, on a Subaru lot that may want it gone.", "Over the $35k ceiling and no accident report shown."], "warn": null, "score": 53, "parts": {"price": 17.2, "miles": 15.3, "yeartrim": 7.1, "history": 8, "logistics": 5.4}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F13JX714060/2018-toyota-tundra/", "firstSeen": 1, "hist": [[1, 36594], [2, 36594]]}, {"yr": 2015, "trim": "Platinum / 1794", "tier": 2, "vinTrim": true, "mi": 98582, "price": 33998, "prev": null, "fee": 1999, "feeKnown": true, "seller": "CarMax Manchester", "city": "Manchester, NH", "dist": 2070, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": false, "tc": null, "vin": "5TFAY5F14FX477007", "feat": [], "notes": ["Top trim under 100k miles, no accidents, clean title.", "New England truck: check for salt rust. About $36k with the $1,999 transfer."], "exp": 34300, "total": 35997, "pct": -4.9, "mpy": 8200, "score": 50, "parts": {"price": 15.1, "miles": 17.6, "yeartrim": 5.3, "history": 12, "logistics": 0.0}, "warn": null, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAY5F14FX477007/2015-toyota-tundra/", "firstSeen": 2, "hist": [[2, 33998]], "id": 21}, {"id": 22, "yr": 2014, "trim": "1794 Edition", "tier": 2, "vinTrim": false, "mi": 164188, "price": 26892, "prev": null, "fee": 0, "feeKnown": true, "total": 26892, "exp": 25600, "pct": -5.1, "mpy": 12600, "seller": "Auto Passion Team", "city": "Hurricane, UT", "dist": 265, "kind": "trip", "region": "Southern Utah", "acc": true, "clean": true, "owner": false, "tc": "High", "vin": "5TFAW5F19EX356297", "feat": ["Saddle leather", "Cooled + heated seats", "Moonroof", "Navigation", "Flex-fuel"], "notes": ["Luxury trim in your mid-$20s target, but 164k miles. That's past where the water pump and air-injection parts tend to show up.", "TrueCar rates it a high price; the Salt Lake 2014 Platinum has 30k fewer miles for about $300 less."], "warn": null, "score": 46, "parts": {"price": 14.9, "miles": 8.8, "yeartrim": 4.0, "history": 12, "logistics": 6.7}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFAW5F19EX356297/2014-toyota-tundra/", "firstSeen": 1, "hist": [[1, 26892], [2, 26892]]}, {"id": 23, "yr": 2015, "trim": "SR5", "tier": 0, "vinTrim": true, "mi": 95360, "price": 34998, "prev": null, "fee": 249, "feeKnown": false, "total": 35247, "exp": 31200, "pct": -12.9, "mpy": 7900, "seller": "CarMax Fremont", "city": "Fremont, CA", "dist": 740, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": false, "tc": null, "vin": "5TFDY5F1XFX451590", "feat": [], "notes": ["Noticeably above market for a 2015 at 95k.", "Transfer fee estimated from nearby Bay Area CarMax stores; confirm on the listing."], "warn": null, "score": 45, "parts": {"price": 7.1, "miles": 17.9, "yeartrim": 1.3, "history": 12, "logistics": 7.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F1XFX451590/2015-toyota-tundra/", "firstSeen": 1, "hist": [[1, 34998], [2, 34998]]}, {"id": 24, "yr": 2015, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 155612, "price": 24587, "prev": null, "fee": 0, "feeKnown": null, "total": 24587, "exp": 24700, "pct": 0.6, "mpy": 12900, "seller": "Discovery Auto Group", "city": "Grand Junction, CO", "dist": 275, "kind": "trip", "region": "Western Colorado", "acc": null, "clean": true, "owner": false, "tc": "High", "vin": "5TFDW5F17FX489039", "feat": ["Flex-fuel"], "notes": ["The cheapest truck found, but 155k miles and a 4.5-hour drive each way.", "Only worth the trip with a clean inspection and records."], "warn": null, "score": 45, "parts": {"price": 20.6, "miles": 8.4, "yeartrim": 1.3, "history": 8, "logistics": 6.6}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F17FX489039/2015-toyota-tundra/", "firstSeen": 1, "hist": [[1, 24587], [2, 24587]]}, {"yr": 2014, "trim": "SR5", "tier": 0, "vinTrim": true, "mi": 65604, "price": 33998, "prev": null, "fee": 1999, "feeKnown": true, "seller": "CarMax Roanoke", "city": "Roanoke, VA", "dist": 1720, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": false, "tc": null, "vin": "5TFDY5F10EX325625", "feat": [], "notes": ["Very low miles for a 2014, but the $1,999 transfer pushes it to about $36k.", "Trim decoded from VIN as SR5-grade; confirm on the listing."], "exp": 33600, "total": 35997, "pct": -7.0, "mpy": 5000, "score": 45, "parts": {"price": 13.0, "miles": 20, "yeartrim": 0.0, "history": 12, "logistics": 0.0}, "warn": null, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F10EX325625/2014-toyota-tundra/", "firstSeen": 2, "hist": [[2, 33998]], "id": 25}, {"yr": 2017, "trim": "SR5", "tier": 0, "vinTrim": false, "mi": 124830, "price": 29998, "prev": null, "fee": 1999, "feeKnown": true, "seller": "CarMax Asheville", "city": "Asheville, NC", "dist": 1620, "kind": "transfer", "region": "CarMax transfer", "acc": true, "clean": true, "owner": false, "tc": "Fair", "vin": "5TFDW5F18HX654955", "feat": ["Backup camera", "Tow hitch", "Flex-fuel"], "notes": ["No accidents, clean title, about $32k with the $1,999 transfer.", "East Coast truck, so check underbody photos for salt rust before paying the transfer fee."], "exp": 30200, "total": 31997, "pct": -6.0, "mpy": 12400, "score": 43, "parts": {"price": 14.0, "miles": 12.9, "yeartrim": 3.9, "history": 12, "logistics": 0.0}, "warn": null, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDW5F18HX654955/2017-toyota-tundra/", "firstSeen": 2, "hist": [[2, 29998]], "id": 26}, {"id": 27, "yr": 2014, "trim": "SR5", "tier": 0, "vinTrim": true, "mi": 125034, "price": 28998, "prev": null, "fee": 249, "feeKnown": true, "total": 29247, "exp": 26700, "pct": -9.4, "mpy": 9600, "seller": "CarMax Santa Rosa", "city": "Santa Rosa, CA", "dist": 760, "kind": "transfer", "region": "CarMax transfer", "acc": null, "clean": true, "owner": false, "tc": null, "vin": "5TFDY5F13EX406148", "feat": [], "notes": ["Above market once the transfer fee is added.", "Trim decoded from VIN; no accident report shown."], "warn": null, "score": 42, "parts": {"price": 10.6, "miles": 16.1, "yeartrim": 0.0, "history": 8, "logistics": 7.0}, "url": "https://www.truecar.com/used-cars-for-sale/listing/5TFDY5F13EX406148/2014-toyota-tundra/", "firstSeen": 1, "hist": [[1, 28998], [2, 28998]]}]};
+const DATA = PAYLOAD.trucks, META = PAYLOAD.meta;
+const $ = id => document.getElementById(id);
+const fmt = n => "$" + Math.round(n).toLocaleString("en-US");
+const mi = n => Math.round(n).toLocaleString("en-US");
+function band(s){
+  if(s>=70) return ["Strong deal","var(--strong)"];
+  if(s>=62) return ["Good deal","var(--good)"];
+  if(s>=52) return ["Fair","var(--fair)"];
+  return ["Pass","var(--pass)"];
+}
+function gauge(score,color){
+  const r=40, cx=48, cy=48, a=Math.PI*(1-score/100);
+  const x=cx+r*Math.cos(a), y=cy-r*Math.sin(a);
+  return `<svg viewBox="0 0 96 56" aria-hidden="true">
+    <path d="M8 48 A40 40 0 0 1 88 48" fill="none" stroke="var(--soft)" stroke-width="9" stroke-linecap="round"/>
+    <path d="M8 48 A40 40 0 0 1 ${x.toFixed(2)} ${y.toFixed(2)}" fill="none" stroke="${color}" stroke-width="9" stroke-linecap="round"/>
+  </svg>`;
+}
+const srcLabel = d => d.kind==="local" ? ["local","Wasatch Front"] : d.kind==="trip" ? ["trip","Road trip: "+d.region] : ["","CarMax transfer"];
+function otd(d){
+  const tax=(parseFloat($("a-tax").value)||0)/100, doc=parseFloat($("a-doc").value)||0;
+  return d.total*(1+tax)+doc;
+}
+const PARTS=[["price","Price vs market",35],["miles","Miles for age",20],["yeartrim","Year and trim",15],["history","History",15],["logistics","Logistics",15]];
+
+const CUR=META.current;
+const isNew = d => CUR>1 && d.firstSeen===CUR;
+const lastTwo = d => { const h=d.hist; if(h.length<2) return null; const a=h[h.length-2], b=h[h.length-1]; return b[0]===CUR && a[0]===CUR-1 ? [a[1],b[1]] : null; };
+const dropAmt = d => { const t=lastTwo(d); return t && t[1]<t[0] ? t[0]-t[1] : 0; };
+const riseAmt = d => { const t=lastTwo(d); return t && t[1]>t[0] ? t[1]-t[0] : 0; };
+function renderRefresh(){
+  const r=META.refreshes[META.refreshes.length-1];
+  $("checked").textContent=`Last refreshed ${r.date}`;
+  $("rf-n").textContent=`#${r.n}`;
+  $("rf-date").textContent=`${r.date}. ${r.note}.`;
+  const nNew=DATA.filter(isNew).length, nDrop=DATA.filter(dropAmt).length, nGone=META.removed.length;
+  $("rf-stats").innerHTML=`<li><b>${nNew}</b> new</li><li><b>${nDrop}</b> price drops</li><li><b>${nGone}</b> sold or removed</li><li><b>${DATA.length}</b> trucks tracked</li>`;
+  const g=$("gone");
+  if(!nGone){ g.innerHTML='<li class="none">Nothing has sold or been pulled since the last refresh.</li>'; }
+  else g.innerHTML=META.removed.map(x=>`<li><span class="t">${x.yr} Tundra ${x.trim}</span><span class="p">${fmt(x.price)}</span><span class="m">${x.seller}, ${x.city}. Last seen in refresh #${x.lastSeen}. VIN ${x.vin}</span></li>`).join("");
+}
+$("rf-copy").addEventListener("click",async()=>{
+  const b=$("rf-copy"), t=$("rf-text").textContent;
+  try{ await navigator.clipboard.writeText(t); b.textContent="Copied"; }
+  catch(e){ const r=document.createRange(); r.selectNodeContents($("rf-text")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent="Selected, press Ctrl+C"; }
+  setTimeout(()=>b.textContent="Copy message",2500);
+});
+function render(){
+  const where=$("f-where").value, maxP=+$("f-price").value, maxM=+$("f-miles").value,
+        minY=+$("f-year").value, trim=$("f-trim").value, sort=$("f-sort").value;
+  $("o-price").textContent=fmt(maxP);
+  let rows=DATA.filter(d=>{
+    if(where==="local" && d.kind!=="local") return false;
+    if(where==="range" && d.kind==="transfer") return false;
+    if(where==="trip" && d.kind!=="trip") return false;
+    if(where==="transfer" && d.kind!=="transfer") return false;
+    if(d.total>maxP || d.mi>maxM || d.yr<minY) return false;
+    if(trim!=="any" && String(d.tier)!==trim) return false;
+    const ch=$("f-change").value;
+    if(ch==="new" && !isNew(d)) return false;
+    if(ch==="drop" && !dropAmt(d)) return false;
+    if(ch==="changed" && !isNew(d) && !dropAmt(d) && !riseAmt(d)) return false;
+    return true;
+  });
+  const by={score:(a,b)=>b.score-a.score, otd:(a,b)=>a.total-b.total, miles:(a,b)=>a.mi-b.mi, year:(a,b)=>b.yr-a.yr||b.score-a.score, dist:(a,b)=>a.dist-b.dist};
+  rows.sort(by[sort]);
+  $("count").textContent = rows.length===DATA.length ? `Showing all ${rows.length}` : `Showing ${rows.length} of ${DATA.length}`;
+  const ol=$("results");
+  if(!rows.length){ ol.innerHTML='<li class="empty">No trucks match these filters. Raise the price ceiling or include transfers.</li>'; return; }
+  ol.innerHTML=rows.map(d=>{
+    const [bl,bc]=band(d.score), [sc,sl]=srcLabel(d);
+    const pctTxt = d.pct>=0 ? `<span class="under">${Math.abs(d.pct).toFixed(0)}% under</span>` : `<span class="over">${Math.abs(d.pct).toFixed(0)}% over</span>`;
+    const feeTxt = d.kind==="transfer" ? (d.fee ? `plus ${fmt(d.fee)} transfer${d.feeKnown?"":" (est.)"}` : "$0 transfer") : "";
+    const hist=[
+      d.acc ? '<li class="yes">No accidents reported</li>' : '<li class="unk">Accident history not shown</li>',
+      d.clean ? '<li class="yes">Clean title</li>' : '<li class="unk">Title status not shown</li>',
+      d.owner ? '<li class="yes">One owner</li>' : '',
+      isNew(d) ? '<li class="chg new">New since last refresh</li>' : '',
+      dropAmt(d) ? `<li class="chg drop">Down ${fmt(dropAmt(d))} since last refresh</li>` : '',
+      riseAmt(d) ? `<li class="chg rise">Up ${fmt(riseAmt(d))} since last refresh</li>` : '',
+      d.prev ? `<li class="yes">Price cut from ${fmt(d.prev)}</li>` : '',
+      d.tc ? `<li>TrueCar: ${d.tc.toLowerCase()} price</li>` : ''
+    ].join("");
+    const bars=PARTS.map(([k,l,m])=>`<li><span>${l}</span><span class="bar"><i style="width:${(d.parts[k]/m*100).toFixed(0)}%"></i></span><b>${Math.round(d.parts[k])}/${m}</b></li>`).join("");
+    const where = d.kind==="transfer" ? `${d.seller}, ${d.city}. Ships to a Utah CarMax.` : `${d.seller}, ${d.city}, about ${d.dist} mi from home`;
+    return `<li class="truck">
+      <div class="gauge" aria-label="Deal score ${d.score} out of 100, ${bl}">${gauge(d.score,bc)}<span class="num">${d.score}</span><span class="band" style="color:${bc}">${bl}</span></div>
+      <div>
+        <div class="head"><h2>${d.yr} Tundra ${d.trim}</h2><span class="src ${sc}">${sl}</span>${d.vinTrim?'<span class="src">Trim from VIN</span>':''}<span class="where">${where}</span></div>
+        <dl class="facts">
+          <div class="fact"><dt>Asking</dt><dd>${fmt(d.price)}${d.prev?`<s>${fmt(d.prev)}</s>`:''}<span class="aux">${feeTxt}</span></dd></div>
+          <div class="fact"><dt>Vs. est. market</dt><dd>${pctTxt}<span class="aux">market about ${fmt(d.exp)}</span></dd></div>
+          <div class="fact"><dt>Miles</dt><dd>${mi(d.mi)}<span class="aux">about ${mi(d.mpy)} a year</span></dd></div>
+          <div class="fact"><dt>Est. out the door</dt><dd class="otd" data-id="${d.id}">${fmt(otd(d))}</dd></div>
+        </dl>
+        <ul class="hist">${hist}</ul>
+        <div class="links"><span class="vin">VIN <b>${d.vin}</b></span><a class="lk primary" href="${d.url}" target="_blank" rel="noopener">View listing on TrueCar</a><a class="lk" href="https://www.nhtsa.gov/recalls?vin=${d.vin}" target="_blank" rel="noopener">Check recalls</a></div>
+        ${d.warn?`<p class="warn">${d.warn}</p>`:''}
+      </div>
+      <div class="more">
+        <button class="toggle" aria-expanded="false" aria-controls="det-${d.id}">Why this score</button>
+        <div class="detail" id="det-${d.id}" hidden>
+          <div><h3>Score breakdown</h3><ul class="bars">${bars}</ul></div>
+          <div><h3>Notes</h3><ul class="notes">${d.notes.map(n=>`<li>${n}</li>`).join("")}</ul>
+            ${d.feat.length?`<p class="feat">Listed features: ${d.feat.join(", ")}</p>`:''}
+
+          </div>
+        </div>
+      </div>
+    </li>`;
+  }).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".toggle"); if(!b) return;
+  const det=document.getElementById(b.getAttribute("aria-controls"));
+  const open=b.getAttribute("aria-expanded")==="true";
+  b.setAttribute("aria-expanded",String(!open)); det.hidden=open;
+  b.textContent= open ? "Why this score" : "Hide details";
+});
+["f-where","f-price","f-miles","f-year","f-trim","f-change","f-sort","a-tax","a-doc"].forEach(id=>$(id).addEventListener("input",render));
+
+const Q="toyota tundra crewmax";
+const cl=(sub)=>`https://${sub}.craigslist.org/search/cta?query=${encodeURIComponent(Q)}&min_auto_year=2014&max_auto_year=2021&max_price=35000&auto_drivetrain=3`;
+const fb=(city)=>`https://www.facebook.com/marketplace/${city}/search?query=${encodeURIComponent("tundra crewmax")}&minYear=2014&maxYear=2021&maxPrice=35000`;
+const SITES=[
+ {n:"KSL Cars",d:"Utah's biggest private-party car site. Best single place to look locally.",l:[["Tundra 2014 to 2021","https://cars.ksl.com/search/make/Toyota/model/Tundra/yearFrom/2014/yearTo/2021/priceTo/35000"]]},
+ {n:"Craigslist",d:"Dealers and private sellers. Pre-filtered to 4WD, 2014 to 2021, under $35k.",l:[["Salt Lake",cl("saltlakecity")],["Provo",cl("provo")],["Ogden",cl("ogden")],["Logan",cl("logan")],["St. George",cl("stgeorge")],["Las Vegas",cl("lasvegas")],["Boise",cl("boise")],["Twin Falls",cl("twinfalls")],["East Idaho",cl("eastidaho")]]},
+ {n:"Facebook Marketplace",d:"Lots of private-party trucks. You'll need to be logged in to Facebook.",l:[["Salt Lake City",fb("saltlakecity")],["Provo",fb("provo")],["Las Vegas",fb("lasvegas")],["Boise",fb("boise")]]},
+ {n:"AutoTempest",d:"Searches Craigslist, eBay, Cars.com, Autotrader and more at once, 500 mi from 84005.",l:[["Search all",`https://www.autotempest.com/results?make=toyota&model=tundra&zip=84005&radius=500&minyear=2014&maxyear=2021&maxprice=35000`]]},
+ {n:"Cars.com and Autotrader",d:"Big dealer inventories; filter to CrewMax 4WD on the site.",l:[["Cars.com","https://www.cars.com/shopping/results/?stock_type=used&makes[]=toyota&models[]=toyota-tundra&year_min=2014&year_max=2021&list_price_max=35000&maximum_distance=500&zip=84005"],["Autotrader","https://www.autotrader.com/cars-for-sale/used-cars/toyota/tundra/eagle-mountain-ut?zip=84005&searchRadius=500&startYear=2014&endYear=2021&maxPrice=35000"]]},
+ {n:"CarGurus and TrueCar",d:"Both rate each listing against market price, like this page does.",l:[["CarGurus","https://www.cargurus.com/Cars/l-Used-Toyota-Tundra-d313"],["TrueCar Salt Lake","https://www.truecar.com/used-cars-for-sale/listings/toyota/tundra/price-below-35000/location-salt-lake-city-ut/"],["TrueCar Las Vegas","https://www.truecar.com/used-cars-for-sale/listings/toyota/tundra/body-truck/location-las-vegas-nv/"],["TrueCar Boise area","https://www.truecar.com/used-cars-for-sale/listings/toyota/tundra/price-below-35000/location-nampa-id/"]]},
+ {n:"CarMax and Carvana",d:"No-haggle prices with return windows; CarMax can ship to a Utah store.",l:[["CarMax","https://www.carmax.com/cars/toyota/tundra"],["Carvana","https://www.carvana.com/cars/toyota-tundra"]]},
+ {n:"eBay Motors",d:"Occasional private and dealer trucks, often with inspection photos.",l:[["eBay Motors","https://www.ebay.com/sch/i.html?_nkw=toyota+tundra+crewmax+5.7+4x4"]]},
+];
+$("sites").innerHTML=SITES.map(s=>`<div class="site"><h3>${s.n}</h3><p>${s.d}</p><div class="chips">${s.l.map(([t,u])=>`<a href="${u}" target="_blank" rel="noopener">${t}</a>`).join("")}</div></div>`).join("");
+
+$("found").textContent=DATA.length;
+renderRefresh();
+render();
+</script>
+</body>
+</html>
